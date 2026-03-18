@@ -196,8 +196,14 @@ textarea{resize:vertical;min-height:60px;}
   font-family:inherit;letter-spacing:.5px;
   box-shadow:0 4px 16px rgba(255,43,43,.35);
   transition:all .2s;
+  animation:breathe 2.5s ease-in-out infinite;
 }
-.pay-btn-full:active{transform:scale(.98);}
+.pay-btn-full:active{transform:scale(.98);animation:none;}
+@keyframes pulse-once{0%{transform:scale(1);}50%{transform:scale(1.04);box-shadow:0 8px 28px rgba(255,43,43,.7);}100%{transform:scale(1);}}
+@keyframes breathe{
+  0%,100%{box-shadow:0 4px 16px rgba(255,43,43,.35);transform:scale(1);}
+  50%{box-shadow:0 6px 24px rgba(255,43,43,.6);transform:scale(1.012);}
+}
 
 /* edit fab */
 .edit-fab{
@@ -234,11 +240,11 @@ textarea{resize:vertical;min-height:60px;}
 
     <div class="sec-label">店铺 & 商品</div>
     <div class="grid2">
-      <div class="fg"><label>店铺名称</label><input type="text" id="a-shop" value="BoserMcark 食品旗舰店"></div>
+      <div class="fg"><label>店铺名称</label><input type="text" id="a-shop" value="MegaRed 海外旗舰店"></div>
       <div class="fg"><label>旗舰标签</label><input type="text" id="a-badge" value="抖音旗舰"></div>
-      <div class="fg full"><label>商品标题</label><textarea id="a-title">胶原蛋白肽维C饮/30ml*10瓶 (数量改3下单)</textarea></div>
+      <div class="fg full"><label>商品标题</label><textarea id="a-title">MegaRed脉拓南极深海磷虾油500mg升级80粒ML</textarea></div>
       <div class="fg"><label>头部提示标签（如：数量选3下单更优惠）</label><input type="text" id="a-prodtag" value="数量选3下单更优惠"></div>
-      <div class="fg"><label>商品规格说明</label><input type="text" id="a-spec" value="30ml*10瓶/盒"></div>
+      <div class="fg"><label>商品规格说明</label><input type="text" id="a-spec" value="500mg*80粒/瓶"></div>
     </div>
 
     <div class="sec-label" style="margin-top:18px">商品图片</div>
@@ -250,8 +256,8 @@ textarea{resize:vertical;min-height:60px;}
 
     <div class="sec-label" style="margin-top:18px">价格</div>
     <div class="grid2">
-      <div class="fg"><label>单价（¥）</label><input type="number" id="a-price" value="49.50" step="0.01" min="0"></div>
-      <div class="fg"><label>原价/划线价（¥）</label><input type="number" id="a-orig" value="99.00" step="0.01" min="0"></div>
+      <div class="fg"><label>单价（¥）</label><input type="number" id="a-price" value="309" step="0.01" min="0"></div>
+      <div class="fg"><label>原价/划线价（¥）</label><input type="number" id="a-orig" value="398" step="0.01" min="0"></div>
     </div>
 
     <div class="sec-label" style="margin-top:18px">🎯 阶梯优惠设置（数量越多减越多）</div>
@@ -269,7 +275,7 @@ textarea{resize:vertical;min-height:60px;}
     <div class="sec-label" style="margin-top:18px">物流信息</div>
     <div class="grid2">
       <div class="fg"><label>配送说明</label><input type="text" id="a-ship" value="包邮，赠运费险"></div>
-      <div class="fg"><label>发货说明</label><input type="text" id="a-delivery" value="预售 最晚5天内发货"></div>
+      <div class="fg"><label>发货说明</label><input type="text" id="a-delivery" value="现货 48小时内发货"></div>
     </div>
   </div>
 
@@ -431,7 +437,7 @@ function generate() {
   document.getElementById('p-orig').textContent = ORIG_PRICE > UNIT_PRICE ? '¥' + ORIG_PRICE.toFixed(2) : '';
   document.getElementById('p-ship').innerHTML = `<span class="tag-free">包邮</span>${g('a-ship').replace('包邮，','').replace('包邮,','')}`;
   const delTxt = g('a-delivery');
-  document.getElementById('p-delivery').innerHTML = `<span class="tag-presale">预售</span>${delTxt.replace('预售','').trim()}`;
+  document.getElementById('p-delivery').innerHTML = `<span class="tag-presale">现货</span>${delTxt.replace('现货','').replace('预售','').trim()}`;
 
   // service tags
   const tagsEl = document.getElementById('p-tags');
@@ -512,6 +518,11 @@ function changeQty(d) {
   const el = document.getElementById('qty-num');
   el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
   setTimeout(() => el.classList.remove('pop'), 200);
+  // pulse pay button
+  const btn = document.querySelector('.pay-btn-full');
+  btn.style.animation = 'none';
+  void btn.offsetWidth;
+  btn.style.animation = 'pulse-once 0.4s ease, breathe 2.5s ease-in-out 0.4s infinite';
   updateCheckout();
 }
 
