@@ -186,14 +186,18 @@ textarea{resize:vertical;min-height:60px;}
 .bottom-bar{
   position:sticky;bottom:0;left:0;right:0;
   width:100%;background:#fff;border-top:1px solid var(--gray2);
-  padding:10px 16px 16px;display:flex;align-items:center;justify-content:space-between;z-index:9999;
+  padding:10px 16px 16px;z-index:9999;
 }
-.bl-save{font-size:12px;color:var(--gray4);}
-.bl-save em{font-style:normal;color:var(--red);font-weight:700;}
-.bl-total{font-size:13px;color:var(--dark);margin-top:3px;}
-.bl-total strong{font-size:22px;font-weight:900;color:var(--red);}
-.pay-btn{background:linear-gradient(90deg,var(--red),var(--red2));color:#fff;font-size:16px;font-weight:700;padding:13px 28px;border-radius:100px;border:none;cursor:pointer;font-family:inherit;box-shadow:0 4px 16px rgba(255,43,43,.35);transition:all .2s;}
-.pay-btn:active{transform:scale(.96);}
+.pay-btn-full{
+  width:100%;padding:16px;
+  background:linear-gradient(90deg,var(--red),var(--red2));
+  color:#fff;font-size:16px;font-weight:700;
+  border:none;border-radius:100px;cursor:pointer;
+  font-family:inherit;letter-spacing:.5px;
+  box-shadow:0 4px 16px rgba(255,43,43,.35);
+  transition:all .2s;
+}
+.pay-btn-full:active{transform:scale(.98);}
 
 /* edit fab */
 .edit-fab{
@@ -315,40 +319,18 @@ textarea{resize:vertical;min-height:60px;}
   <div class="sec">
     <div class="del-row">
       <span class="del-label">配送服务</span>
-      <span class="del-val" id="p-ship"></span>
-      <span class="del-arrow">›</span>
-    </div>
-    <div class="del-row">
-      <span class="del-label">发货</span>
-      <span class="del-val" id="p-delivery"></span>
-      <span class="del-arrow">›</span>
-    </div>
-    <div class="del-row">
-      <span class="del-label">无备注</span>
-      <span class="del-val" style="color:var(--gray4)">点击添加备注</span>
+      <span class="del-val"><span id="p-ship"></span>&nbsp;·&nbsp;<span id="p-delivery"></span></span>
       <span class="del-arrow">›</span>
     </div>
   </div>
 
-  <div class="remark-wrap">
-    <div class="remark-lbl">备注</div>
-    <textarea class="remark-ta" rows="2" placeholder="给商家留言，最多100字…" maxlength="100"></textarea>
-  </div>
 
-  <div class="price-detail">
-    <div class="pd-row"><span class="pd-lbl">商品总价</span><span class="pd-val" id="pd-sub"></span></div>
-    <div class="pd-row"><span class="pd-lbl">活动优惠</span><span class="pd-val red" id="pd-disc"></span></div>
-    <div class="pd-row"><span class="pd-lbl">运费</span><span class="pd-val red">免费</span></div>
-    <div class="pd-row pd-total"><span class="pd-lbl">合计</span><span class="pd-val" id="pd-total"></span></div>
-  </div>
+
+
 
   <div class="spacer"></div>
   <div class="bottom-bar">
-    <div>
-      <div class="bl-save">共减 <em id="bl-save"></em></div>
-      <div class="bl-total">立即支付 <strong id="bl-total"></strong></div>
-    </div>
-    <button class="pay-btn" onclick="pay()">立即支付</button>
+    <button class="pay-btn-full" onclick="pay()">共减 <span id="bl-save"></span>，立即支付 ¥<span id="bl-total"></span></button>
   </div>
 
 </div>
@@ -504,9 +486,6 @@ function updateCheckout() {
   const toPay = Math.max(0, origTotal - totalDisc);
 
   document.getElementById('qty-num').textContent = qty;
-  document.getElementById('pd-sub').textContent = '¥' + origTotal.toFixed(2);
-  document.getElementById('pd-disc').textContent = '-¥' + totalDisc.toFixed(2);
-  document.getElementById('pd-total').textContent = '¥' + toPay.toFixed(2);
   document.getElementById('bl-save').textContent = '¥' + totalDisc.toFixed(2);
   document.getElementById('bl-total').textContent = toPay.toFixed(2);
 
