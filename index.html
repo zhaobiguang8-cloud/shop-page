@@ -12,7 +12,7 @@
   --blue:#4A90D9;--gray:#F5F5F5;--gray2:#E8E8E8;--gray3:#BBBBBB;--gray4:#999;
   --dark:#1A1A1A;
 }
-body{font-family:'Noto Sans SC',sans-serif;background:#f0f0f0;min-height:100vh;max-width:520px;margin:0 auto;}
+body{font-family:'Noto Sans SC',sans-serif;background:#f0f0f0;min-height:100vh;}#admin,#checkout{max-width:520px;margin:0 auto;position:relative;}
 
 /* ====== ADMIN ====== */
 #admin{padding:16px;}
@@ -182,11 +182,11 @@ textarea{resize:vertical;min-height:60px;}
 .pd-total .pd-lbl{font-size:15px;font-weight:700;color:var(--dark);}
 .pd-total .pd-val{font-size:19px;font-weight:900;color:var(--red);}
 
-.spacer{height:100px;}
+.spacer{height:0;}
 .bottom-bar{
-  position:fixed !important;bottom:0 !important;left:0;right:0;
+  position:sticky;bottom:0;left:0;right:0;
   width:100%;background:#fff;border-top:1px solid var(--gray2);
-  padding:10px 16px env(safe-area-inset-bottom, 16px);display:flex;align-items:center;justify-content:space-between;z-index:9999;
+  padding:10px 16px 16px;display:flex;align-items:center;justify-content:space-between;z-index:9999;
 }
 .bl-save{font-size:12px;color:var(--gray4);}
 .bl-save em{font-style:normal;color:var(--red);font-weight:700;}
@@ -309,15 +309,7 @@ textarea{resize:vertical;min-height:60px;}
       </div>
     </div>
 
-    <div class="tier-banner">
-      <span class="tier-fire">🔥</span>
-      <div class="tier-text">
-        <div class="tier-main-txt" id="tier-main"></div>
-        <div class="tier-sub-txt" id="tier-sub"></div>
-      </div>
-    </div>
-    <div class="tier-prog"><div class="tier-bar" id="tier-bar" style="width:0%"></div></div>
-    <div class="tiers-chips" id="tiers-chips"></div>
+
   </div>
 
   <div class="sec">
@@ -481,17 +473,6 @@ function generate() {
     document.getElementById('p-emoji').style.display = 'block';
   }
 
-  // build tier chips
-  const chipsEl = document.getElementById('tiers-chips');
-  chipsEl.innerHTML = '';
-  TIERS.forEach(t => {
-    const d = document.createElement('div');
-    d.className = 'tchip';
-    d.id = 'chip-' + t.qty;
-    d.innerHTML = `<div class="tc-qty">满${t.qty}件</div><div class="tc-disc">减¥${t.disc}</div><div class="tc-lbl">立减</div>`;
-    chipsEl.appendChild(d);
-  });
-
   updateCheckout();
 
   document.getElementById('admin').style.display = 'none';
@@ -532,15 +513,10 @@ function updateCheckout() {
   // banner
   if (next) {
     const need = next.qty - qty;
-    document.getElementById('tier-main').textContent = `再买 ${need} 件，立减金额提升至¥${next.disc}！`;
-    document.getElementById('tier-sub').textContent = `当前已减¥${tier.disc} · 买${next.qty}件可减¥${next.disc}`;
   } else {
-    document.getElementById('tier-main').textContent = '🎊 已享最高优惠！';
-    document.getElementById('tier-sub').textContent = `当前已减¥${tier.disc}，超值！`;
   }
 
   const maxQ = TIERS[TIERS.length-1].qty;
-  document.getElementById('tier-bar').style.width = Math.min(100, Math.round(qty/maxQ*100)) + '%';
 
   TIERS.forEach(t => {
     const el = document.getElementById('chip-' + t.qty);
