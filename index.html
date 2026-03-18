@@ -114,10 +114,14 @@ textarea{resize:vertical;min-height:60px;}
 .prod-img img{width:100%;height:100%;object-fit:cover;display:none;}
 .prod-info{flex:1;display:flex;flex-direction:column;justify-content:space-between;}
 .prod-badge-row{display:flex;gap:5px;margin-bottom:4px;}
+.tag-global-inline{background:#7B2FF7;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;white-space:nowrap;vertical-align:middle;margin-right:4px;display:inline-block;line-height:1.6;}
+.tag-tax{background:#f5f5f5;color:#999;font-size:10px;padding:1px 7px;border-radius:4px;white-space:nowrap;border:1px solid #e8e8e8;}
+.tax-line{font-size:11px;color:#aaa;margin:4px 0 5px;display:flex;align-items:center;gap:3px;}
 .prod-badge-tag{background:#FFF0F0;border:1px solid #FFD0D0;color:var(--red);font-size:10px;padding:1px 6px;border-radius:3px;}
 .prod-title-text{font-size:13px;color:var(--dark);line-height:1.45;}
 .prod-tags-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px;}
 .tag-blue{border:1px solid var(--blue);color:var(--blue);font-size:10px;padding:1px 6px;border-radius:3px;}
+.tag-tax-inline{border:1px solid #ddd;color:#999;font-size:10px;padding:1px 6px;border-radius:3px;background:#fafafa;}
 
 .prod-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:8px;}
 .price-col{}
@@ -241,9 +245,7 @@ textarea{resize:vertical;min-height:60px;}
     <div class="sec-label">店铺 & 商品</div>
     <div class="grid2">
       <div class="fg"><label>店铺名称</label><input type="text" id="a-shop" value="MegaRed 海外旗舰店"></div>
-      <div class="fg"><label>旗舰标签</label><input type="text" id="a-badge" value="抖音旗舰"></div>
       <div class="fg full"><label>商品标题</label><textarea id="a-title">MegaRed脉拓南极深海磷虾油500mg升级80粒ML</textarea></div>
-      <div class="fg"><label>头部提示标签（如：数量选3下单更优惠）</label><input type="text" id="a-prodtag" value="数量选3下单更优惠"></div>
       <div class="fg"><label>商品规格说明</label><input type="text" id="a-spec" value="500mg*80粒/瓶"></div>
     </div>
 
@@ -266,7 +268,7 @@ textarea{resize:vertical;min-height:60px;}
 
     <div class="sec-label" style="margin-top:18px">服务标签</div>
     <div class="tags-edit" id="service-tags">
-      <div class="tag-edit-item"><input type="text" value="7天无理由退货"><span class="tdel" onclick="this.parentElement.remove()">×</span></div>
+      <div class="tag-edit-item"><input type="text" value="不支持7天无理由退货"><span class="tdel" onclick="this.parentElement.remove()">×</span></div>
       <div class="tag-edit-item"><input type="text" value="极速退款"><span class="tdel" onclick="this.parentElement.remove()">×</span></div>
       <div class="tag-edit-item"><input type="text" value="晚发即赔"><span class="tdel" onclick="this.parentElement.remove()">×</span></div>
     </div>
@@ -295,14 +297,13 @@ textarea{resize:vertical;min-height:60px;}
   <div class="sec">
     <div class="shop-row">
       <span class="shop-name" id="p-shop"></span>
-      <span class="shop-badge" id="p-badge"></span>
+      
     </div>
     <div class="prod-row">
       <div class="prod-img" id="p-imgbox"><img id="p-img" src="" alt=""><span id="p-emoji">💊</span></div>
       <div class="prod-info">
         <div>
-          <div class="prod-badge-row"><span class="prod-badge-tag" id="p-prodtag"></span></div>
-          <div class="prod-title-text" id="p-title"></div>
+          <div class="prod-title-text" id="p-title"><span class="tag-global-inline">全球购</span><span id="p-title-text"></span></div>
           <div class="prod-tags-row" id="p-tags"></div>
         </div>
         <div class="prod-bottom">
@@ -328,6 +329,7 @@ textarea{resize:vertical;min-height:60px;}
       <span class="del-val"><span id="p-ship"></span>&nbsp;·&nbsp;<span id="p-delivery"></span></span>
       <span class="del-arrow">›</span>
     </div>
+  </div>
   </div>
 
 
@@ -430,9 +432,7 @@ function generate() {
 
   // fill checkout fields
   document.getElementById('p-shop').textContent = g('a-shop');
-  document.getElementById('p-badge').textContent = g('a-badge');
-  document.getElementById('p-title').textContent = g('a-title');
-  document.getElementById('p-prodtag').textContent = g('a-prodtag');
+  document.getElementById('p-title-text').textContent = ' ' + g('a-title');
   document.getElementById('p-price').textContent = UNIT_PRICE.toFixed(2);
   document.getElementById('p-orig').textContent = ORIG_PRICE > UNIT_PRICE ? '¥' + ORIG_PRICE.toFixed(2) : '';
   document.getElementById('p-ship').innerHTML = `<span class="tag-free">包邮</span>${g('a-ship').replace('包邮，','').replace('包邮,','')}`;
@@ -442,6 +442,11 @@ function generate() {
   // service tags
   const tagsEl = document.getElementById('p-tags');
   tagsEl.innerHTML = '';
+  // 固定第一个：进口税
+  const taxTag = document.createElement('span');
+  taxTag.className = 'tag-tax-inline';
+  taxTag.textContent = 'ⓘ 已含进口税';
+  tagsEl.appendChild(taxTag);
   document.querySelectorAll('#service-tags .tag-edit-item input').forEach(inp => {
     if (inp.value.trim()) {
       const s = document.createElement('span');
